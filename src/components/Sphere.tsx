@@ -119,7 +119,7 @@ export default function Sphere() {
   return (
     <div className="flex h-screen relative bg-neutral-600 font-sans w-full overflow-hidden">
       <Authenticated>
-        <div className="w-1/5 z-10 right-2 bottom-2 absolute p-4 m-2 rounded-md bg-neutral-900 text-white">
+        <div className="w-3/5 lg:w-1/5 z-10 right-2 bottom-2 absolute p-4 m-2 rounded-md bg-neutral-900 text-white">
           <h2 className="text-2xl font-bold mb-4">Buy Pixels</h2>
           <ImageUploadForm
             onImageUpload={handleImageUpload}

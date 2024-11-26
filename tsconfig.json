@@ -6,6 +6,9 @@
   ],
   "compilerOptions": {
     "baseUrl": ".",
+    "typeRoots": ["node_modules/@types"],
+    "types": ["three"],
+    "moduleResolution": "node",
     "paths": {
       "@/*": ["./src/*"]
     }

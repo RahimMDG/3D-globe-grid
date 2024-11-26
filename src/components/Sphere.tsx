@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 // import { OrbitControls, Sparkles } from '@react-three/drei'
 import * as THREE from "three";
@@ -37,6 +37,14 @@ function SphereObject({
   const meshRef = useRef<THREE.Mesh>(null);
   const pixels = useQuery(api.pixels.getPixels);
 
+  // Modify texture mapping to reduce pole distortion
+  useEffect(() => {
+    if (texture) {
+      texture.mapping = THREE.EquirectangularRefractionMapping;
+      texture.needsUpdate = true;
+    }
+  }, [texture]);
+
   useFrame(() => {
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.0005;
@@ -65,7 +73,7 @@ function SphereObject({
       onPointerMove={(e) => handlePointerMove(e.intersections[0])}
       onPointerOut={() => onHover(null)}
     >
-      <sphereGeometry args={[1, 100, 100]} />
+      <icosahedronGeometry args={[1, 100]} />
       <meshStandardMaterial map={texture} />
     </mesh>
   );

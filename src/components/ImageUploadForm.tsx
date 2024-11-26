@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { api } from "../../convex/_generated/api";
-import { useMutation } from "convex/react";
-import { PaymentForm } from "./PaymentForm"
+// import { api } from "../../convex/_generated/api";
+// import { useMutation } from "convex/react";
+// import { PaymentForm } from "./PaymentForm"
 
 interface ImageUploadFormProps {
   onImageUpload: (
@@ -27,12 +27,11 @@ export function ImageUploadForm({
   const [width, setWidth] = useState(1);
   const [height, setHeight] = useState(1);
   const [url, setUrl] = useState("");
-  const [showPayment, setShowPayment] = useState(false);
-  const [reservedPixelId, setReservedPixelId] = useState<string | null>(null)
+  // const [showPayment, setShowPayment] = useState(false);
+  // const [reservedPixelId, setReservedPixelId] = useState<string | null>(null)
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const mutate = useMutation(api.pixels.reservePixels);
-  const generateUploadUrl = useMutation(api.pixels.generateImagesUploadUrl);
+  // const mutate = useMutation(api.pixels.reservePixels);
+  // const generateUploadUrl = useMutation(api.pixels.generateImagesUploadUrl);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -73,7 +72,7 @@ export function ImageUploadForm({
       reader.onload = async (event) => {
         if (event.target && typeof event.target.result === "string") {
           try {
-            setShowPayment(true);
+            // setShowPayment(true);
             onImageUpload(event.target.result, x, y, width, height);
           } catch (error) {
             console.error("Failed to reserve pixels:", error);

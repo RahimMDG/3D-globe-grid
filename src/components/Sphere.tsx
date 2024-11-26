@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from '@react-three/drei'
+// import { OrbitControls, Sparkles } from '@react-three/drei'
 import * as THREE from "three";
 import { useControls } from "leva";
 import { GridTexture } from "./GridTexture";
@@ -15,6 +15,7 @@ import {
 } from "./ui/dialog";
 import { Button } from "./ui/button";
 import { SignInFormPassword } from "./SignInFormPassword";
+import CustomOrbitControls from "./customOrbitControl";
 
 interface PixelData {
   websiteUrl: string;
@@ -64,7 +65,7 @@ function SphereObject({
       onPointerMove={(e) => handlePointerMove(e.intersections[0])}
       onPointerOut={() => onHover(null)}
     >
-      <sphereGeometry args={[1, 64, 64]} />
+      <sphereGeometry args={[1, 100, 100]} />
       <meshStandardMaterial map={texture} />
     </mesh>
   );
@@ -75,7 +76,7 @@ export default function Sphere() {
   const [hoveredPixel, setHoveredPixel] = useState<PixelData | null>(null);
 
   const { gridSize } = useControls({
-    gridSize: { value: 1000, min: 100, max: 2000, step: 100 },
+    gridSize: { value: 1000, min: 100, max: 1000, step: 10 },
   });
 
   const handleTextureCreated = useCallback((newTexture: THREE.Texture) => {
@@ -139,7 +140,7 @@ export default function Sphere() {
         </div>
       </Unauthenticated>
       <div className="flex-1 relative">
-        <Canvas camera={{ position: [0, 0, 3] }}>
+        <Canvas camera={{ position: [0, 0, 3], near: 0.0001 }}>
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 10, 10]} />
           <Stars />
@@ -150,7 +151,8 @@ export default function Sphere() {
               onHover={setHoveredPixel}
             />
           )}
-          <OrbitControls />
+          {/* <Sparkles count={200} scale={6} size={2} speed={0.4} /> */}
+          <CustomOrbitControls />
         </Canvas>
         {hoveredPixel && (
           <div
@@ -173,7 +175,7 @@ export default function Sphere() {
         )}
       </div>
       <GridTexture
-        resolution={2048}
+        resolution={4096}
         gridSize={gridSize}
         onTextureCreated={handleTextureCreated}
       />

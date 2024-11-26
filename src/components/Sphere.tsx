@@ -128,7 +128,7 @@ export default function Sphere() {
         </div>
       </Authenticated>
       <Unauthenticated>
-        <div className="p-4 w-full absolute">
+        <div className="p-4 w-full absolute z-10">
           <Dialog>
             <DialogTrigger asChild>
               <Button>Sign In</Button>

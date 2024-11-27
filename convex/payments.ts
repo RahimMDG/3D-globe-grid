@@ -10,6 +10,11 @@ const environment = new paypal.core.SandboxEnvironment(
   process.env.PAYPAL_CLIENT_ID!,
   process.env.PAYPAL_CLIENT_SECRET!
 )
+
+// const environment = new paypal.core.SandboxEnvironment(
+//   "AYOwQY_2bR-VGYw7LmGvNVeePxJN5Gc65gvmjC5P_UzvgdbgetEsvrYRcm92GsMtlQv1WeBL0fxEb-PG",
+//   "EGAsZZiu-DWhgA1M2Tb2-tNMG56qML_rAKqrZxNKgQhZ4f30QvPTQO-wf3UAGAUroKDe4B4ixGQnf8x5"
+// )
 const client = new paypal.core.PayPalHttpClient(environment)
 
 export const createPayment = action({
@@ -51,7 +56,6 @@ export const createPayment = action({
 export const capturePayment = action({
   args: {
     orderId: v.string(),
-    paymentId: v.id("payments"),
   },
   handler: async (ctx, args) => {
     const request = new paypal.orders.OrdersCaptureRequest(args.orderId)
@@ -66,11 +70,11 @@ export const capturePayment = action({
       
       if (capture.result.status === "COMPLETED") {
         await ctx.runMutation(api.db.updatePaymentStatus, {
-          id: args.paymentId,
+          id: args.orderId,
           status: "COMPLETED",
         })
-        await ctx.runMutation(api.pixels.confirmPayment, {
-          paymentId: args.paymentId,
+        await ctx.runMutation(api.db.confirmPayment, {
+          paymentId: args.orderId,
         })
         return { success: true }
       } else {

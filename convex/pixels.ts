@@ -1,6 +1,5 @@
 import { v } from "convex/values"
 import { mutation, query } from "./_generated/server"
-import { Id } from "./_generated/dataModel";
 
 export const getPixels = query({
   args: {},
@@ -49,24 +48,6 @@ export const reservePixels = mutation({
     })
 
     return id;
-  },
-})
-
-export const confirmPayment = mutation({
-  args: {
-    paymentId: v.id("payments"),
-  },
-  handler: async (ctx, args) => {
-    const payment = await ctx.db.get(args.paymentId)
-    if (!payment) {
-      throw new Error("Payment not found")
-    }
-
-    for (const pixelId of payment.pixelIds) {
-      await ctx.db.patch(pixelId as Id<"pixels">, {
-        paid: true,
-      })
-    }
   },
 })
 

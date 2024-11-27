@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-// import { OrbitControls, Sparkles } from '@react-three/drei'
 import * as THREE from "three";
 import { useControls } from "leva";
 import { GridTexture } from "./GridTexture";
@@ -8,14 +7,12 @@ import { ImageUploadForm } from "./ImageUploadForm";
 import { Stars } from "./Stars";
 import { api } from "../../convex/_generated/api";
 import { Authenticated, Unauthenticated, useQuery } from "convex/react";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "./ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "./ui/button";
 import { SignInFormPassword } from "./SignInFormPassword";
 import CustomOrbitControls from "./customOrbitControl";
+import { ScrollArea } from "./ui/scroll-area";
 
 interface PixelData {
   websiteUrl: string;
@@ -50,7 +47,7 @@ function SphereObject({
     if (!uv) return;
 
     const x = Math.floor(uv.x * gridSize);
-    const y = Math.floor(uv.y * gridSize);
+    const y = Math.floor(-uv.y * gridSize);
 
     const pixel = pixels.find(
       (p) => x >= p.x && x <= p.x + p.width && y >= p.y && y <= p.y + p.height
@@ -66,7 +63,10 @@ function SphereObject({
       onPointerOut={() => onHover(null)}
     >
       <sphereGeometry args={[1, 100, 100]} />
-      <meshStandardMaterial map={texture} />
+      <meshStandardMaterial
+        map={texture}
+        toneMapped={true} // Ensure the material respects tone mapping
+      />
     </mesh>
   );
 }
@@ -76,10 +76,12 @@ export default function Sphere() {
   const [hoveredPixel, setHoveredPixel] = useState<PixelData | null>(null);
 
   const { gridSize } = useControls({
-    gridSize: { value: 1000, min: 100, max: 1000, step: 10 },
+    gridSize: { value: 100, min: 100, max: 500, step: 10 },
   });
 
   const handleTextureCreated = useCallback((newTexture: THREE.Texture) => {
+    // Ensure vibrant colors for the texture
+    newTexture.colorSpace = THREE.SRGBColorSpace;
     setTexture(newTexture);
   }, []);
 
@@ -119,12 +121,22 @@ export default function Sphere() {
   return (
     <div className="flex h-screen relative bg-neutral-900 font-sans w-full overflow-hidden">
       <Authenticated>
-        <div className="w-3/5 lg:w-1/5 z-10 right-2 bottom-2 absolute p-4 m-2 rounded-md border border-neutral-800 bg-neutral-900 text-white">
-          <h2 className="text-2xl font-bold mb-4">Buy Pixels</h2>
-          <ImageUploadForm
-            onImageUpload={handleImageUpload}
-            gridSize={gridSize}
-          />
+        <div className="z-10 right-2 bottom-2 absolute p-4 m-2 rounded-md border border-neutral-800 bg-neutral-900">
+          <Drawer>
+            <DrawerTrigger asChild>
+              <Button variant="outline">Purchase slot</Button>
+            </DrawerTrigger>
+            <DrawerContent className="h-4/5 bg-neutral-800 text-white">
+              <div className="mx-auto w-3/5 h-full">
+                <ScrollArea className="h-full w-full p-8">
+                  <ImageUploadForm
+                    onImageUpload={handleImageUpload}
+                    gridSize={gridSize}
+                  />
+                </ScrollArea>
+              </div>
+            </DrawerContent>
+          </Drawer>
         </div>
       </Authenticated>
       <Unauthenticated>
@@ -140,9 +152,15 @@ export default function Sphere() {
         </div>
       </Unauthenticated>
       <div className="flex-1 relative">
-        <Canvas camera={{ position: [0, 0, 1.4], near: 0.0001 }}>
+        <Canvas
+          camera={{ position: [0, 0, 1.4], near: 0.0001 }}
+          gl={{
+            toneMapping: THREE.ACESFilmicToneMapping, // Use ACES tone mapping for vibrant colors
+            outputColorSpace: THREE.SRGBColorSpace, // Output colors in sRGB
+          }}
+        >
           <ambientLight intensity={0.06} />
-          <pointLight position={[8, 15, 10]}  intensity={25}/>
+          <pointLight position={[8, 15, 10]} intensity={55} />
           <Stars />
           {texture && (
             <SphereObject
@@ -151,7 +169,6 @@ export default function Sphere() {
               onHover={setHoveredPixel}
             />
           )}
-          {/* <Sparkles count={200} scale={6} size={2} speed={0.4} /> */}
           <CustomOrbitControls />
         </Canvas>
         {hoveredPixel && (

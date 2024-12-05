@@ -120,7 +120,7 @@ export default function Sphere() {
 
   return (
     <div className="flex h-screen relative bg-neutral-900 font-sans w-full overflow-hidden">
-      {/* <Authenticated> */}
+      <Authenticated>
         <div className="z-10 right-2 bottom-2 absolute p-4 m-2 rounded-md border border-neutral-800 bg-neutral-900">
           <Drawer>
             <DrawerTrigger asChild>
@@ -138,8 +138,8 @@ export default function Sphere() {
             </DrawerContent>
           </Drawer>
         </div>
-      {/* </Authenticated> */}
-      {/* <Unauthenticated>
+      </Authenticated>
+      <Unauthenticated>
         <div className="p-4 w-full absolute z-10">
           <Dialog>
             <DialogTrigger asChild>
@@ -150,7 +150,7 @@ export default function Sphere() {
             </DialogContent>
           </Dialog>
         </div>
-      </Unauthenticated> */}
+      </Unauthenticated>
       <div className="flex-1 relative">
         <Canvas
           camera={{ position: [0, 0, 1.4], near: 0.0001 }}

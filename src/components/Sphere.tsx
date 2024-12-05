@@ -127,7 +127,7 @@ export default function Sphere() {
               <Button variant="outline">Purchase slot</Button>
             </DrawerTrigger>
             <DrawerContent className="h-4/5 bg-neutral-800 text-white">
-              <div className="mx-auto w-3/5 h-full">
+              <div className="mx-auto w-full lg:w-3/5 h-full">
                 <ScrollArea className="h-full w-full p-8">
                   <ImageUploadForm
                     onImageUpload={handleImageUpload}

@@ -121,7 +121,7 @@ export default function Sphere() {
   return (
     <div className="flex h-screen relative bg-neutral-900 font-sans w-full overflow-hidden">
       <Authenticated>
-        <div className="z-10 right-2 bottom-2 absolute p-4 m-2 rounded-md border border-neutral-800 bg-neutral-900">
+        <div className="z-10 right-2 bottom-8 absolute p-4 m-2 rounded-md border border-neutral-800 bg-neutral-900">
           <Drawer>
             <DrawerTrigger asChild>
               <Button variant="outline">Purchase slot</Button>

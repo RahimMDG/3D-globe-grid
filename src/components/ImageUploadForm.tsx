@@ -354,7 +354,7 @@ export function ImageUploadForm({
                             htmlFor="file-upload"
                             className="flex flex-col items-center text-neutral-300"
                           >
-                            <span className="text-sm font-medium">
+                            <span className="text-sm font-medium text-center">
                               Drag & drop an image here, or click to upload
                             </span>
                             <svg

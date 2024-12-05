@@ -143,7 +143,7 @@ export default function Sphere() {
         <div className="p-4 w-full absolute z-10">
           <Dialog>
             <DialogTrigger asChild>
-              <Button>Sign In</Button>
+              <Button variant="outline">Sign In</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <SignInFormPassword />

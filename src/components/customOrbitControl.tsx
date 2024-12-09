@@ -14,6 +14,9 @@ const CustomOrbitControls = () => {
     if (controls) {
       controls.enableDamping = true; // Optional: Add damping for smooth control
       controls.dampingFactor = 0.05;
+      controls.enablePan = false;
+      controls.maxDistance = 2
+      controls.minDistance = 1.2
     }
     return () => controls?.dispose(); // Cleanup controls on unmount
   }, []);

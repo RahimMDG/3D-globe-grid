@@ -1,11 +1,10 @@
 import { defineSchema, defineTable } from "convex/server";
-import { authTables } from "@convex-dev/auth/server";
+// import { authTables } from "@convex-dev/auth/server";
 import { v } from "convex/values";
  
 const schema = defineSchema({
-  ...authTables,
+  // ...authTables,
   pixels: defineTable({
-    owner: v.string(),
     image: v.string(),
     websiteUrl: v.string(),
     x: v.number(),

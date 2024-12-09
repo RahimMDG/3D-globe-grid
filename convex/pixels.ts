@@ -1,10 +1,24 @@
 import { v } from "convex/values"
 import { mutation, query } from "./_generated/server"
+import { Id } from "./_generated/dataModel";
 
 export const getPixels = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("pixels").collect()
+    const pix = await ctx.db.query("pixels").collect();
+
+    // const new_pix = await Promise.all(pix.map(async pic=>{
+    //   const url = await ctx.storage.getUrl(pic.image as Id<"_storage">);
+    //   if(!url){
+    //     return pic
+    //   }
+    //   return{
+    //     ...pic,
+    //     image: url,
+    //   }
+    // }))
+
+    return pix;
   },
 })
 
@@ -20,7 +34,6 @@ export const reservePixels = mutation({
     y: v.number(),
     width: v.number(),
     height: v.number(),
-    owner: v.string(),
     image: v.string(),
     websiteUrl: v.string(),
   },
@@ -41,9 +54,13 @@ export const reservePixels = mutation({
     if (existing.length > 0) {
       throw new Error("Pixels already taken")
     }
+    console.log(args)
+
+    const url = await ctx.storage.getUrl(args.image as Id<"_storage">);
 
     const id = await ctx.db.insert("pixels", {
       ...args,
+      image: url as string,
       paid: false,
     })
 

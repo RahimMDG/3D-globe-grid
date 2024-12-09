@@ -14,6 +14,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
+import type * as crons from "../crons.js";
 import type * as db from "../db.js";
 import type * as http from "../http.js";
 import type * as payments from "../payments.js";
@@ -29,6 +30,7 @@ import type * as pixels from "../pixels.js";
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  crons: typeof crons;
   db: typeof db;
   http: typeof http;
   payments: typeof payments;

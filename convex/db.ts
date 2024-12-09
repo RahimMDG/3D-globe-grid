@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { internalMutation, mutation } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { Id } from "./_generated/dataModel";
 
@@ -69,3 +69,26 @@ export const confirmPayment = mutation({
     }
   },
 })
+
+export const cleanupUnpaidPixels = internalMutation({
+  handler: async (ctx) => {
+    // Get current timestamp
+    const oneMinuteAgo = Date.now() - 60000; // 60000 ms = 1 minute
+
+    // Find unpaid pixels older than 1 minute
+    const unpaidPixels = await ctx.db
+      .query("pixels")
+      .filter((q) => q.and(
+        q.eq(q.field("paid"), false),
+        q.lte(q.field("_creationTime"), oneMinuteAgo)
+      ))
+      .collect();
+
+    // Delete unpaid pixels
+    for (const pixel of unpaidPixels) {
+      await ctx.db.delete(pixel._id);
+    }
+
+    return unpaidPixels.length;
+  }
+});

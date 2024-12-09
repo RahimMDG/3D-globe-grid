@@ -240,7 +240,6 @@ export function ImageUploadForm({
           y: minY,
           width,
           height,
-          owner: "user-id", // Replace with actual user ID
           image: storageId,
           websiteUrl: values.url,
         });

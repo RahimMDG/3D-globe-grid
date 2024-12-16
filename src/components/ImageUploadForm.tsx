@@ -18,6 +18,7 @@ import { PaymentForm } from "./PaymentForm";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 import { Id } from "convex/_generated/dataModel";
 import { Checkbox } from "./ui/checkbox";
+import { NavLink } from "react-router";
 
 // Zod schema for form validation
 const formSchema = z.object({
@@ -459,7 +460,7 @@ export function ImageUploadForm({
                       Accept terms and conditions
                     </label>
                     <p className="text-sm text-muted-foreground">
-                      You agree to our Terms of Service and Privacy Policy.
+                      You agree to our <NavLink to='/terms' className="text-indigo-600">Terms of Service and Privacy Policy</NavLink>.
                     </p>
                   </div>
                 </FormItem>

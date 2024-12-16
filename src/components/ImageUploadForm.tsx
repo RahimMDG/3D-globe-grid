@@ -16,11 +16,14 @@ import { api } from "../../convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
 import { PaymentForm } from "./PaymentForm";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { Id } from "convex/_generated/dataModel";
+import { Checkbox } from "./ui/checkbox";
 
 // Zod schema for form validation
 const formSchema = z.object({
   image: z.instanceof(File).optional(),
   url: z.string().url({ message: "Please enter a valid URL" }),
+  terms: z.boolean({ message: "Please accept terms to make purchase" }),
 });
 
 // Type for form values
@@ -54,6 +57,7 @@ export function ImageUploadForm({
   const existingPixels = useQuery(api.pixels.getPixels);
 
   const mutate = useMutation(api.pixels.reservePixels);
+  const updatePixel = useMutation(api.pixels.updatePixel);
   const generateUploadUrl = useMutation(api.pixels.generateImagesUploadUrl);
 
   // Form setup with React Hook Form and Zod
@@ -62,6 +66,7 @@ export function ImageUploadForm({
     defaultValues: {
       image: undefined,
       url: "",
+      terms: false,
     },
   });
 
@@ -214,6 +219,42 @@ export function ImageUploadForm({
     }
   };
 
+  // Function to handle image upload
+  const uploadImage = async (
+    image: File,
+    minX: number,
+    minY: number,
+    width: number,
+    height: number
+  ) => {
+    const postUrl = await generateUploadUrl();
+    const result = await fetch(postUrl, {
+      method: "POST",
+      headers: { "Content-Type": image.type },
+      body: image,
+    });
+
+    const { storageId } = await result.json();
+    updatePixel({
+      id: reservedPixelId as Id<"pixels">,
+      image: storageId as string,
+    });
+
+    // Call the onImageUpload prop to handle post-upload behavior
+    // onImageUpload(storageId, minX, minY, width, height);
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      if (event.target && typeof event.target.result === "string") {
+        try {
+          onImageUpload(event.target.result, minX, minY, width, height);
+        } catch (error) {
+          console.error("Failed to upload image:", error);
+        }
+      }
+    };
+    reader.readAsDataURL(form.getValues("image"));
+  };
   // Form submission handler
   const onSubmit = async (values: FormValues) => {
     if (values.image && selectedCells.length > 0) {
@@ -226,21 +267,12 @@ export function ImageUploadForm({
       const width = maxX - minX + 1;
       const height = maxY - minY + 1;
 
-      const postUrl = await generateUploadUrl();
-      const result = await fetch(postUrl, {
-        method: "POST",
-        headers: { "Content-Type": values.image.type },
-        body: values.image,
-      });
-
-      const { storageId } = await result.json();
       try {
         const pixelId = await mutate({
           x: minX,
           y: minY,
           width,
           height,
-          image: storageId,
           websiteUrl: values.url,
         });
         setReservedPixelId(pixelId);
@@ -248,18 +280,6 @@ export function ImageUploadForm({
       } catch (error) {
         console.error("Failed to reserve pixels:", error);
       }
-
-      const reader = new FileReader();
-      reader.onload = async (event) => {
-        if (event.target && typeof event.target.result === "string") {
-          try {
-            onImageUpload(event.target.result, minX, minY, width, height);
-          } catch (error) {
-            console.error("Failed to upload image:", error);
-          }
-        }
-      };
-      reader.readAsDataURL(values.image);
     }
   };
 
@@ -267,7 +287,7 @@ export function ImageUploadForm({
   const totalCost = selectedCells.length;
 
   return (
-    <div className="space-y-6 w-full my-3 mx-auto h-full bg-neutral-900 p-3 rounded-md">
+    <div className="w-full p-4 mx-auto h-full bg-neutral-900 rounded-md">
       {!showPayment ? (
         <Form {...form}>
           <form
@@ -420,6 +440,32 @@ export function ImageUploadForm({
               </ScrollArea>
             </div>
 
+            <FormField
+              control={form.control}
+              name="terms"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <div className="grid gap-1.5 leading-none">
+                    <label
+                      htmlFor="terms1"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Accept terms and conditions
+                    </label>
+                    <p className="text-sm text-muted-foreground">
+                      You agree to our Terms of Service and Privacy Policy.
+                    </p>
+                  </div>
+                </FormItem>
+              )}
+            />
+
             <div className="text-lg font-bold">
               Total Pixels Selected: {selectedCells.length}
               <br />
@@ -436,14 +482,25 @@ export function ImageUploadForm({
         </Form>
       ) : (
         <PaymentForm
-          amount={totalCost}
+          amount={selectedCells.length}
           pixelIds={reservedPixelId ? [reservedPixelId] : []}
-          onSuccess={() => {
+          onSuccess={async () => {
             setShowPayment(false);
-            // Reset form
-            form.reset();
             setSelectedCells([]);
             setReservedPixelId(null);
+
+            // Upload the image on successful payment
+            const minX = Math.min(...selectedCells.map((cell) => cell.x));
+            const minY = Math.min(...selectedCells.map((cell) => cell.y));
+            const width =
+              Math.max(...selectedCells.map((cell) => cell.x)) - minX + 1;
+            const height =
+              Math.max(...selectedCells.map((cell) => cell.y)) - minY + 1;
+
+            const image = form.getValues("image");
+            if (image) {
+              await uploadImage(image, minX, minY, width, height);
+            }
           }}
         />
       )}

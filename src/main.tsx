@@ -4,15 +4,22 @@ import App from "./App";
 import "./index.css";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { ConvexReactClient } from "convex/react";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
+import { BrowserRouter, Route, Routes } from "react-router";
+import About from "./about";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ConvexAuthProvider client={convex}>
-      <App />
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<App />} />
+          <Route path="about" element={<About />} />
+        </Routes>
+      </BrowserRouter>
       <Toaster />
     </ConvexAuthProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

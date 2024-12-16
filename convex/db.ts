@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { internalMutation, mutation } from "./_generated/server";
-import { getAuthUserId } from "@convex-dev/auth/server";
 import { Id } from "./_generated/dataModel";
 
 export const createPaymentInDb = mutation({
@@ -11,15 +10,9 @@ export const createPaymentInDb = mutation({
     paypalOrderId: v.string(),
   },
   handler: async (ctx, args) => {
-    // Get the current authenticated user
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return { error: "Not authenticated" };
-    }
 
     // Insert the payment record into the database
     const paymentId = await ctx.db.insert("payments", {
-      userId: userId,
       amount: args.amount,
       status: args.status,
       pixelIds: args.pixelIds,

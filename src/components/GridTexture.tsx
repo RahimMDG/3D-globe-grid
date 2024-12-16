@@ -26,7 +26,7 @@ export function GridTexture({ resolution, gridSize, onTextureCreated }: GridText
         ctx.fillRect(0, 0, resolution, resolution)
 
         // Draw grid 
-        ctx.strokeStyle = '#404040'
+        ctx.strokeStyle = '#040404'
         ctx.lineWidth = 1/(gridSize/200)
 
         const cellSize = resolution / gridSize

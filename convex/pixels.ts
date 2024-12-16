@@ -1,5 +1,5 @@
-import { v } from "convex/values"
-import { mutation, query } from "./_generated/server"
+import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 
 export const getPixels = query({
@@ -20,7 +20,7 @@ export const getPixels = query({
 
     return pix;
   },
-})
+});
 
 export const generateImagesUploadUrl = mutation({
   handler: async (ctx) => {
@@ -34,14 +34,13 @@ export const reservePixels = mutation({
     y: v.number(),
     width: v.number(),
     height: v.number(),
-    image: v.string(),
     websiteUrl: v.string(),
   },
   handler: async (ctx, args) => {
     // Check if pixels are available
     const existing = await ctx.db
       .query("pixels")
-      .filter((q) => 
+      .filter((q) =>
         q.and(
           q.gte(q.field("x"), args.x),
           q.lte(q.field("x"), args.x + args.width),
@@ -49,22 +48,31 @@ export const reservePixels = mutation({
           q.lte(q.field("y"), args.y + args.height)
         )
       )
-      .collect()
+      .collect();
 
     if (existing.length > 0) {
-      throw new Error("Pixels already taken")
+      throw new Error("Pixels already taken");
     }
-    console.log(args)
-
-    const url = await ctx.storage.getUrl(args.image as Id<"_storage">);
 
     const id = await ctx.db.insert("pixels", {
       ...args,
-      image: url as string,
       paid: false,
-    })
-
+    });
+    
     return id;
   },
-})
+});
 
+export const updatePixel = mutation({
+  args: {
+    image: v.string(),
+    id: v.id("pixels"),
+  },
+  handler: async (ctx, args) => {
+    const url = await ctx.storage.getUrl(args.image as Id<"_storage">);
+
+    await ctx.db.patch(args.id, {
+      image: url as string,
+    });
+  },
+});

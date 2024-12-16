@@ -10,11 +10,6 @@ const environment = new paypal.core.SandboxEnvironment(
   process.env.PAYPAL_CLIENT_ID!,
   process.env.PAYPAL_CLIENT_SECRET!
 )
-
-// const environment = new paypal.core.SandboxEnvironment(
-//   "AYOwQY_2bR-VGYw7LmGvNVeePxJN5Gc65gvmjC5P_UzvgdbgetEsvrYRcm92GsMtlQv1WeBL0fxEb-PG",
-//   "EGAsZZiu-DWhgA1M2Tb2-tNMG56qML_rAKqrZxNKgQhZ4f30QvPTQO-wf3UAGAUroKDe4B4ixGQnf8x5"
-// )
 const client = new paypal.core.PayPalHttpClient(environment)
 
 export const createPayment = action({
@@ -58,6 +53,7 @@ export const capturePayment = action({
     orderId: v.string(),
   },
   handler: async (ctx, args) => {
+    console.log(args)
     const request = new paypal.orders.OrdersCaptureRequest(args.orderId)
     
     try {
@@ -67,6 +63,7 @@ export const capturePayment = action({
           token: capture.result.id
         }
       })
+      console.log(capture)
       
       if (capture.result.status === "COMPLETED") {
         await ctx.runMutation(api.db.updatePaymentStatus, {
@@ -76,6 +73,7 @@ export const capturePayment = action({
         await ctx.runMutation(api.db.confirmPayment, {
           paymentId: args.orderId,
         })
+        console.log("captured successfully")
         return { success: true }
       } else {
         throw new Error("Payment not completed")

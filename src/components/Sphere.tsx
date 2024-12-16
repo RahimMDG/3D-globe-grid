@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useControls } from "leva";
@@ -7,10 +7,11 @@ import { ImageUploadForm } from "./ImageUploadForm";
 import { Stars } from "./Stars";
 import { api } from "../../convex/_generated/api";
 import { useQuery } from "convex/react";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "./ui/button";
 import CustomOrbitControls from "./customOrbitControl";
 import { ScrollArea } from "./ui/scroll-area";
+import { NavLink } from "react-router";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 interface PixelData {
   websiteUrl: string;
@@ -27,7 +28,7 @@ function SphereObject({
 }: {
   texture: THREE.Texture;
   gridSize: number;
-  onHover: (pixel: PixelData | null) => void;
+  onHover: (pixel: PixelData | null, event?: THREE.Intersection) => void;
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const pixels = useQuery(api.pixels.getPixels);
@@ -57,7 +58,7 @@ function SphereObject({
     if (pixel) {
       setIsHovering(true);
       setHoveredPixel(pixel);
-      onHover(pixel);
+      onHover(pixel, event);
     } else {
       setIsHovering(false);
       setHoveredPixel(null);
@@ -80,19 +81,21 @@ function SphereObject({
         setHoveredPixel(null);
         onHover(null);
       }}
-      onClick={handleClick}
+      onDoubleClick={handleClick}
     >
       <sphereGeometry args={[1, 100, 100]} />
       <meshStandardMaterial map={texture} toneMapped={true} />
     </mesh>
   );
 }
+
 export default function Sphere() {
   const [texture, setTexture] = useState<THREE.Texture | null>(null);
   const [hoveredPixel, setHoveredPixel] = useState<PixelData | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const { gridSize } = useControls({
-    gridSize: { value: 100, min: 100, max: 500, step: 10 },
+    gridSize: { value: 100, min: 100, max: 1000, step: 10 },
   });
 
   const handleTextureCreated = useCallback((newTexture: THREE.Texture) => {
@@ -134,25 +137,60 @@ export default function Sphere() {
     }
   };
 
+  // Track mouse position
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      setMousePosition({ x: event.clientX, y: event.clientY });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
+  const handleHover = (pixel: PixelData | null) => {
+    setHoveredPixel(pixel);
+  };
+
+  const handleLinkClick = () => {
+    if (hoveredPixel && hoveredPixel.websiteUrl) {
+      window.open(hoveredPixel.websiteUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
   return (
-    <div className="flex h-screen relative bg-neutral-900 font-sans w-full overflow-hidden">
-      <div className="z-10 right-2 bottom-8 absolute p-4 m-2 rounded-md border border-neutral-800 bg-neutral-900">
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button variant="outline">Purchase slot</Button>
-          </DrawerTrigger>
-          <DrawerContent className="h-4/5 bg-neutral-800 text-white">
-            <div className="mx-auto w-full lg:w-3/5 h-full">
-              <ScrollArea className="h-full w-full p-8">
+    <div
+      className={`flex h-screen relative bg-neutral-900 font-sans w-full overflow-hidden ${hoveredPixel && "cursor-pointer"}`}
+      onDoubleClick={handleLinkClick}
+    >
+      <nav className="z-10 fixed top-0 left-0 flex w-full justify-between p-4">
+        <div className="pl-4">
+          <NavLink to="/" end>
+            <p className="text-neutral-300 inline-block mr-4 font-semibold">
+              Home
+            </p>
+          </NavLink>
+          <NavLink to="/about">
+            <p className="text-neutral-300 inline-block font-semibold">About</p>
+          </NavLink>
+        </div>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" className="bg-neutral-300">Purchase slot</Button>
+          </SheetTrigger>
+          <SheetContent className="bg-neutral-900 text-neutral-200">
+            <div className="mx-auto w-full pt-6 h-full">
+              <ScrollArea className="h-full pt-6 w-full">
                 <ImageUploadForm
                   onImageUpload={handleImageUpload}
                   gridSize={gridSize}
                 />
               </ScrollArea>
             </div>
-          </DrawerContent>
-        </Drawer>
-      </div>
+          </SheetContent>
+        </Sheet>
+      </nav>
       <div className="flex-1 relative">
         <Canvas
           camera={{ position: [0, 0, 1.4], near: 0.0001 }}
@@ -167,28 +205,23 @@ export default function Sphere() {
             <SphereObject
               texture={texture}
               gridSize={gridSize}
-              onHover={setHoveredPixel}
+              onHover={handleHover}
             />
           )}
           <CustomOrbitControls />
         </Canvas>
         {hoveredPixel && (
           <div
-            className="absolute p-2 bg-black/80 text-white rounded"
+            className="fixed z-20 p-2 bg-neutral-800 text-neutral-200 rounded pointer-events-auto cursor-pointer"
             style={{
-              left: "50%",
-              bottom: "20px",
-              transform: "translateX(-50%)",
+              position: "fixed",
+              left: `${mousePosition.x}px`,
+              top: `${mousePosition.y}px`,
+              transform: "translate(-50%, -120%)",
             }}
+            onClick={handleLinkClick}
           >
-            <a
-              href={hoveredPixel.websiteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:underline"
-            >
-              Visit Website
-            </a>
+            {hoveredPixel.websiteUrl}
           </div>
         )}
       </div>

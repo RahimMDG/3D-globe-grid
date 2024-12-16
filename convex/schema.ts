@@ -5,7 +5,7 @@ import { v } from "convex/values";
 const schema = defineSchema({
   // ...authTables,
   pixels: defineTable({
-    image: v.string(),
+    image: v.optional(v.string()),
     websiteUrl: v.string(),
     x: v.number(),
     y: v.number(),
@@ -14,7 +14,7 @@ const schema = defineSchema({
     paid: v.boolean(),
   }).index("by_coordinates", ["x", "y"]),
   payments: defineTable({
-    userId: v.string(),
+    // userId: v.string(),
     amount: v.number(),
     status: v.string(),
     pixelIds: v.array(v.string()),

@@ -10,10 +10,7 @@ function Instructions() {
       <aside>
         <ul className="tree-view">
           <li>
-            <a href="#intro">Intro</a>
-          </li>
-          <li>
-            <a href="#components">About</a>
+            <a href="#">Instructions</a>
             <ul>
               <li>
                 <NavLink to="/about">About</NavLink>

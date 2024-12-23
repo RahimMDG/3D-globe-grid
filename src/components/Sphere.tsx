@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useControls } from "leva";
+// import { useControls } from "leva";
 import { GridTexture } from "./GridTexture";
 import { ImageUploadForm } from "./ImageUploadForm";
 import { Stars } from "./Stars";
@@ -34,6 +34,13 @@ function SphereObject({
   const pixels = useQuery(api.pixels.getPixels);
   const [isHovering, setIsHovering] = useState(false);
   const [hoveredPixel, setHoveredPixel] = useState<PixelData | null>(null);
+
+  useEffect(() => {
+    if (meshRef.current) {
+      // Set a random initial y-axis rotation
+      meshRef.current.rotation.y = Math.random() * Math.PI * 2;
+    }
+  }, []);
 
   useFrame(() => {
     if (meshRef.current && !isHovering) {
@@ -94,9 +101,12 @@ export default function Sphere() {
   const [hoveredPixel, setHoveredPixel] = useState<PixelData | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  const { gridSize } = useControls({
-    gridSize: { value: 100, min: 100, max: 1000, step: 10 },
-  });
+  // const { gridSize } = useControls({
+  //   gridSize: { value: 100, min: 100, max: 1000, step: 10 },
+  // });
+
+  const gridSize = 1000;
+  
 
   const handleTextureCreated = useCallback((newTexture: THREE.Texture) => {
     // Ensure vibrant colors for the texture

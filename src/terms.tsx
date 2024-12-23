@@ -1,52 +1,9 @@
-import { useEffect } from "react";
 import "./98.css";
 import "./docs.css";
 import "./vs.css";
+import { NavLink } from "react-router";
 
 function Terms() {
-  useEffect(() => {
-    const handleRowClick = (event: Event) => {
-      const highlightedClass = "highlighted";
-
-      const isRow = (element: HTMLElement) => {
-        return (
-          element.tagName === "TR" && element.parentElement?.tagName === "TBODY"
-        );
-      };
-
-      const newlySelectedRow = event
-        .composedPath()
-        .find((el) => el instanceof HTMLElement && isRow(el)) as
-        | HTMLElement
-        | undefined;
-
-      if (!newlySelectedRow) return;
-
-      const previouslySelectedRow = Array.from(
-        newlySelectedRow.parentElement?.children || []
-      )
-        .filter((el): el is HTMLElement => isRow(el as HTMLElement))
-        .find((el) => el.classList.contains(highlightedClass));
-
-      if (previouslySelectedRow) {
-        previouslySelectedRow.classList.toggle(highlightedClass);
-      }
-
-      newlySelectedRow.classList.toggle(highlightedClass);
-    };
-
-    const tables =
-      document.querySelectorAll<HTMLTableElement>("table.interactive");
-    tables.forEach((table) => {
-      table.addEventListener("click", handleRowClick);
-    });
-
-    return () => {
-      tables.forEach((table) => {
-        table.removeEventListener("click", handleRowClick);
-      });
-    };
-  }, []);
 
   return (
     <div className="bg-[#c0c0c0] h-fit overflow-hidden">
@@ -56,7 +13,18 @@ function Terms() {
             <a href="#intro">Intro</a>
           </li>
           <li>
-          <a href="https://milliondollarglobe.com">milliondollarglobe.com</a>
+            <a href="#components">About</a>
+            <ul>
+              <li>
+                <NavLink to="/about">About</NavLink>
+              </li>
+              <li>
+                <NavLink to="/terms">Terms</NavLink>
+              </li>
+              <li>
+                <NavLink to="/instructions">Instructions</NavLink>
+              </li>
+            </ul>
           </li>
         </ul>
       </aside>

@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { BrowserRouter, Route, Routes } from "react-router";
 import About from "./about";
 import Terms from "./terms";
+import Instructions from "./instructions";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
 
@@ -18,7 +19,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route index element={<App />} />
           <Route path="about" element={<About />} />
-          <Route path="Terms" element={<Terms />} />
+          <Route path="terms" element={<Terms />} />
+          <Route path="instructions" element={<Instructions />} />
         </Routes>
       </BrowserRouter>
       <Toaster />

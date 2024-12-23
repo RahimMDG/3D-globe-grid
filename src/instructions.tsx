@@ -32,44 +32,23 @@ function Instructions() {
         <h1>Instructions</h1>
         <hr />
         <p>
-          A groundbreaking digital advertising platform that reimagines virtual
-          real estate. Inspired by the concept of pixel-based advertising, this
-          unique 3D sphere offers one million blocks for sale, each representing
-          a piece of a vibrant, interactive global canvas.
+          This is a short instruction on how to navigate the site.
         </p>
 
-        <h3>What is The Million Dollar Globe?</h3>
-        <p>
-          The Million Dollar Globe is a virtual 3D sphere divided into one
-          million blocks, available for purchase. Buyers can claim their blocks
-          to display custom content—logos, images, links, or messages—and become
-          part of a dynamic, ever-evolving digital monument visible to the
-          world.
+        <h3>Making a purchase</h3>
+        <p className="mb-3">
+          To purchase a slot, click purchase and add the details required. 
+          The image uploaded will be used as the image for the slot, and the link will be the link the user navigates to when they double click on your slot.
+        </p>
+        <p className="mb-3">
+          You can select the part of the slot you want to purchase by clicking on the canvas provided. automatically you can only select a rectangle or a square so as to avoid issues during image placement.
+          The red squares in the map indicate places that have already been purchased and thus cannot be purchased.
+          if you are not satisfied with the area you have chosen to purchase and would like to remove some blocks, you can remove the grids by clicking a block on the bottom most or the right most  grid of the selection which will remove that whole line.
+          This has been done to preserve the square or triangle shape to avoid issues with image placment.
         </p>
 
-        <h3>Why Join the Globe?</h3>
-        <ul>
-          <li>
-            <strong>Global Reach:</strong> Showcase your brand or message on a
-            platform that’s designed for visibility and creativity.
-          </li>
-          <li>
-            <strong>Immortalize Your Spot:</strong> Each block purchased becomes
-            a lasting part of the globe.
-          </li>
-          <li>
-            <strong>Innovative Advertising:</strong> Stand out from the crowd
-            with a unique, memorable presence in the digital space.
-          </li>
-        </ul>
-
-        <h3>Be Part of History</h3>
-        <p>
-          The Million Dollar Globe is more than just an advertising
-          platform—it’s a creative, collaborative project that combines
-          innovation, art, and opportunity. Whether you’re a business, artist,
-          or individual, this is your chance to claim a piece of virtual
-          history.
+        <p className="mb-3">
+          To navigate to the site represented by an image on the sphere, double click on the image.
         </p>
 
         <p>

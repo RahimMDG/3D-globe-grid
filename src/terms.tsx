@@ -4,7 +4,6 @@ import "./vs.css";
 import { NavLink } from "react-router";
 
 function Terms() {
-
   return (
     <div className="bg-[#c0c0c0] h-fit overflow-hidden">
       <aside>
@@ -29,54 +28,81 @@ function Terms() {
         </ul>
       </aside>
       <main>
-        <h1>Terms of service And privacy policy</h1>
-        <hr />
+        <h1>Terms of Service</h1>
         <p>
-          A groundbreaking digital advertising platform that reimagines virtual
-          real estate. Inspired by the concept of pixel-based advertising, this
-          unique 3D sphere offers one million blocks for sale, each representing
-          a piece of a vibrant, interactive global canvas.
+          <strong>Last Updated:</strong> 01/12/2024
         </p>
 
-        <h3>What is The Million Dollar Globe?</h3>
         <p>
-          The Million Dollar Globe is a virtual 3D sphere divided into one
-          million blocks, available for purchase. Buyers can claim their blocks
-          to display custom content—logos, images, links, or messages—and become
-          part of a dynamic, ever-evolving digital monument visible to the
-          world.
+          By using{" "}
+          <a href="https://milliondollarglobe.com" target="_blank">
+            milliondollarglobe.com
+          </a>{" "}
+          you agree to the following terms:
         </p>
-
-        <h3>Why Join the Globe?</h3>
         <ul>
           <li>
-            <strong>Global Reach:</strong> Showcase your brand or message on a
-            platform that’s designed for visibility and creativity.
+            <strong>Nature of Purchase:</strong> Purchasing a block grants you
+            the right to display content on a designated area of our virtual
+            sphere. This is a license, not ownership, and only on the area
+            chosen at purchase. The image cannot be changed post-upload unless
+            in exceptional circumstances such as the site no longer exists or a
+            full rebrand. The site and globe aim to stay indefinitely, but it
+            will be online for at least 5 years as the goal is to create
+            internet history.
           </li>
           <li>
-            <strong>Immortalize Your Spot:</strong> Each block purchased becomes
-            a lasting part of the globe.
+            <strong>Content Rules:</strong> You are responsible for the content
+            displayed. Inappropriate, illegal, or copyrighted material may be
+            removed without refund.
           </li>
           <li>
-            <strong>Innovative Advertising:</strong> Stand out from the crowd
-            with a unique, memorable presence in the digital space.
+            <strong>Refund Policy:</strong> All purchases are final and
+            non-refundable. If you request to remove your site and link, it is
+            possible; however, no refund is provided, and the plots will be
+            available for sale. If an image or link is removed, you can request
+            to change it to a more acceptable one.
+          </li>
+          <li>
+            <strong>Liability:</strong> We are not liable for technical issues,
+            downtime, or losses related to your use of the Website.
+          </li>
+          <li>
+            <strong>Dispute Resolution:</strong> Disputes will be resolved under
+            the laws of [Jurisdiction/City].
           </li>
         </ul>
 
-        <h3>Be Part of History</h3>
+        <h2>Privacy Policy</h2>
         <p>
-          The Million Dollar Globe is more than just an advertising
-          platform—it’s a creative, collaborative project that combines
-          innovation, art, and opportunity. Whether you’re a business, artist,
-          or individual, this is your chance to claim a piece of virtual
-          history.
+          We collect limited personal data (e.g., name, email, payment info) to
+          process transactions and improve our services. Data may be shared with
+          third-party providers like payment processors. For questions or data
+          requests, contact us at{" "}
+          <a href="mailto:milliondollarglobeinfo@gmail.com">
+            milliondollarglobeinfo@gmail.com
+          </a>
+          .
         </p>
 
+        <h2>Copyright</h2>
         <p>
-          Visit{" "}
-          <a href="https://milliondollarglobe.com">milliondollarglobe.com</a> to
-          reserve your blocks today and join a community shaping the future of
-          digital advertising!
+          Users retain rights to their uploaded content but grant us the right
+          to display it. The Website design and concept remain our property.
+        </p>
+
+        <h2>Payment Terms</h2>
+        <p>
+          Payments are processed in USD. Taxes, if applicable, are your
+          responsibility.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          Email:{" "}
+          <a href="mailto:milliondollarglobeinfo@gmail.com">
+            milliondollarglobeinfo@gmail.com
+          </a>
         </p>
       </main>
     </div>

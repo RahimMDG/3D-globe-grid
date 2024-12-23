@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import img from "./assets/logo.jpg"
 import "./98.css";
 import "./docs.css";
 import "./vs.css";
@@ -73,7 +74,10 @@ function About() {
         </ul>
       </aside>
       <main>
-        <h1>About us</h1>
+        <div className="flex items-center ">
+        <h1 className="mr-6">About us</h1>
+        <img src={img} alt="logo" className="h-20 w-20"/>
+        </div>
         <hr />
         <p>
           A groundbreaking digital advertising platform that reimagines virtual

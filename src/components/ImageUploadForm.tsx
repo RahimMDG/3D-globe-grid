@@ -215,7 +215,7 @@ export function ImageUploadForm({
           { x, y },
         ]);
 
-        console.log(newSelectedCells)
+        // console.log(newSelectedCells)
       }
 
       setSelectedCells(newSelectedCells);

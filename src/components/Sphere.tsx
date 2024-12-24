@@ -11,7 +11,7 @@ import { Button } from "./ui/button";
 import CustomOrbitControls from "./customOrbitControl";
 import { ScrollArea } from "./ui/scroll-area";
 import { NavLink } from "react-router";
-import twitter from "../assets/twitter.png"
+import twitter from "../assets/twitter.png";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 interface PixelData {
@@ -107,7 +107,6 @@ export default function Sphere() {
   // });
 
   const gridSize = 1000;
-  
 
   const handleTextureCreated = useCallback((newTexture: THREE.Texture) => {
     // Ensure vibrant colors for the texture
@@ -176,19 +175,28 @@ export default function Sphere() {
       onDoubleClick={handleLinkClick}
     >
       <nav className="z-10 fixed top-0 left-0 flex w-full justify-between p-4">
-        <div className="pl-4">
+        <div className="pl-4 w-fit flex items-center">
           <NavLink to="/" end>
-            <p className="text-neutral-300 inline-block mr-4 font-semibold">
-              Home
-            </p>
+            <p className="text-neutral-300 mr-4 font-semibold">Home</p>
           </NavLink>
           <NavLink to="/about">
-            <p className="text-neutral-300 inline-block font-semibold">About</p>
+            <p className="text-neutral-300 mr-4 font-semibold">About</p>
           </NavLink>
+          <div className="rounded-full bg-white p-1">
+            <a
+              href="https://x.com/milliondolglobe?s=21 "
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img className="w-5 h-5" src={twitter} alt="twitter" />
+            </a>
+          </div>
         </div>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" className="bg-neutral-300">Purchase slot</Button>
+            <Button variant="outline" className="bg-neutral-300">
+              Purchase slot
+            </Button>
           </SheetTrigger>
           <SheetContent className="bg-neutral-900 text-neutral-200">
             <div className="mx-auto w-full pt-6 h-full">
@@ -236,11 +244,7 @@ export default function Sphere() {
           </div>
         )}
       </div>
-      <div className="z-10 absolute bottom-4 right-4 rounded-full bg-white p-2">
-        <a href="https://x.com/milliondolglobe?s=21 " target="_blank" rel="noopener noreferrer">
-          <img className="w-6 h-6" src={twitter} alt="twitter" />
-        </a>
-      </div>
+
       <GridTexture
         resolution={4096}
         gridSize={gridSize}

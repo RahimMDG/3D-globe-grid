@@ -214,6 +214,8 @@ export function ImageUploadForm({
           ...selectedCells,
           { x, y },
         ]);
+
+        console.log(newSelectedCells)
       }
 
       setSelectedCells(newSelectedCells);
@@ -474,7 +476,7 @@ export function ImageUploadForm({
             </div>
             <Button
               type="submit"
-              className="w-full border border-neutral-800 bg-neutral-950"
+              className="w-full border text-neutral-200 hover:text-neutral-700 border-neutral-800 bg-neutral-950"
               disabled={selectedCells.length === 0 || !form.watch("image")}
             >
               Reserve Pixels

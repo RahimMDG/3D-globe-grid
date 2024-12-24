@@ -11,6 +11,7 @@ import { Button } from "./ui/button";
 import CustomOrbitControls from "./customOrbitControl";
 import { ScrollArea } from "./ui/scroll-area";
 import { NavLink } from "react-router";
+import twitter from "../assets/twitter.png"
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 interface PixelData {
@@ -234,6 +235,11 @@ export default function Sphere() {
             {hoveredPixel.websiteUrl}
           </div>
         )}
+      </div>
+      <div className="z-10 absolute bottom-4 right-4 rounded-full bg-white p-2">
+        <a href="https://x.com/milliondolglobe?s=21 " target="_blank" rel="noopener noreferrer">
+          <img className="w-6 h-6" src={twitter} alt="twitter" />
+        </a>
       </div>
       <GridTexture
         resolution={4096}

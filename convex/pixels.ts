@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
 
+
 export const getPixels = query({
   args: {},
   handler: async (ctx) => {
@@ -28,6 +29,28 @@ export const generateImagesUploadUrl = mutation({
   },
 });
 
+// Helper function to check if two rectangles have any overlapping pixels
+function hasPixelOverlap(
+  rect1: { x: number; y: number; width: number; height: number },
+  rect2: { x: number; y: number; width: number; height: number }
+): boolean {
+  // Generate bounds for both rectangles
+  const rect1Right = rect1.x + rect1.width - 1;  // -1 because width includes starting position
+  const rect1Bottom = rect1.y + rect1.height - 1;
+  const rect2Right = rect2.x + rect2.width - 1;
+  const rect2Bottom = rect2.y + rect2.height - 1;
+
+  // Check if any pixel would overlap
+  const hasOverlap = !(
+    rect1Right < rect2.x ||     // rect1 is completely to the left
+    rect1.x > rect2Right ||     // rect1 is completely to the right
+    rect1Bottom < rect2.y ||    // rect1 is completely above
+    rect1.y > rect2Bottom       // rect1 is completely below
+  );
+
+  return hasOverlap;
+}
+
 export const reservePixels = mutation({
   args: {
     x: v.number(),
@@ -37,29 +60,48 @@ export const reservePixels = mutation({
     websiteUrl: v.string(),
   },
   handler: async (ctx, args) => {
-    // Check if pixels are available
+    // First, get all pixels in the general area (using a slightly larger range for safety)
     const existing = await ctx.db
       .query("pixels")
       .filter((q) =>
         q.and(
-          q.gte(q.field("x"), args.x),
-          q.lte(q.field("x"), args.x + args.width),
-          q.gte(q.field("y"), args.y),
-          q.lte(q.field("y"), args.y + args.height)
+          q.lte(q.field("x"), args.x + args.width),    // Existing starts before or at new area's end
+          q.gte(
+            q.add(q.field("x"), q.field("width")), 
+            args.x
+          ),                                           // Existing ends after or at new area's start
+          q.lte(q.field("y"), args.y + args.height),   // Similar checks for y-axis
+          q.gte(
+            q.add(q.field("y"), q.field("height")), 
+            args.y
+          )
         )
       )
       .collect();
 
-    if (existing.length > 0) {
-      throw new Error("Pixels already taken");
+    // Check each existing pixel area for actual pixel overlap
+    for (const existingPixel of existing) {
+      if (hasPixelOverlap(args, existingPixel)) {
+        return { 
+          success: false, 
+          error: "Some pixels in this area are already taken",
+          conflictingArea: existingPixel
+        };
+      }
     }
 
+    // If no collisions found, insert the new pixels
     const id = await ctx.db.insert("pixels", {
       ...args,
       paid: false,
     });
-    
-    return id;
+
+    return {
+      success: true,
+      id,
+      error: null,
+      conflictingArea: null
+    };
   },
 });
 

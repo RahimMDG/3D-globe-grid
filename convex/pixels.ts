@@ -82,10 +82,9 @@ export const reservePixels = mutation({
     // Check each existing pixel area for actual pixel overlap
     for (const existingPixel of existing) {
       if (hasPixelOverlap(args, existingPixel)) {
+        console.log('overlap')
         return { 
-          success: false, 
-          error: "Some pixels in this area are already taken",
-          conflictingArea: existingPixel
+          error: "overlap",
         };
       }
     }
@@ -96,12 +95,7 @@ export const reservePixels = mutation({
       paid: false,
     });
 
-    return {
-      success: true,
-      id,
-      error: null,
-      conflictingArea: null
-    };
+    return id;
   },
 });
 

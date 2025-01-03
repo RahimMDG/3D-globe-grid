@@ -56,6 +56,13 @@ export function ImageUploadForm({
 
   const cellSize = 10; // Adjust based on your needs
 
+
+  // Clear selection handler
+  const handleClearSelection = () => {
+    setSelectedCells([]);
+  }
+
+
   // Query existing pixels
   const existingPixels = useQuery(api.pixels.getPixels);
 
@@ -284,7 +291,7 @@ export function ImageUploadForm({
           toast.error("Overlap", {
             description:
               "Pixels should not overlap or go over already purchased pixels",
-              richColors: true
+            richColors: true,
           });
         } else {
           setReservedPixelId(pixelId);
@@ -435,6 +442,15 @@ export function ImageUploadForm({
 
             <h4 className="mt-8">Select Pixels</h4>
             <div className="grid grid-cols-1 h-3/5 w-full p-1 bg-neutral-600 rounded-md border border-neutral-300">
+              <div className="flex justify-end mb-2">
+                <Button
+                  onClick={handleClearSelection}
+                  className="w-full "
+                  disabled={selectedCells.length === 0}
+                >
+                  Clear Selection
+                </Button>
+              </div>
               <ScrollArea
                 className="relative h-fill w-fill"
                 style={{

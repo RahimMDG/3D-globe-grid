@@ -102,11 +102,11 @@ export default function Sphere() {
   const [hoveredPixel, setHoveredPixel] = useState<PixelData | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  const { gridSize } = useControls({
-    gridSize: { value: 100, min: 100, max: 1000, step: 10 },
-  });
+  // const { gridSize } = useControls({
+  //   gridSize: { value: 100, min: 100, max: 1000, step: 10 },
+  // });
 
-  // const gridSize = 1000;
+  const gridSize = 1000;
 
   const handleTextureCreated = useCallback((newTexture: THREE.Texture) => {
     // Ensure vibrant colors for the texture

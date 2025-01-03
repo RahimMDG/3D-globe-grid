@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useControls } from "leva";
+// import { useControls } from "leva";
 import { GridTexture } from "./GridTexture";
 import { ImageUploadForm } from "./ImageUploadForm";
 import { Stars } from "./Stars";

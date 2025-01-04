@@ -22,6 +22,7 @@ interface PixelData {
   height: number;
 }
 
+
 function SphereObject({
   texture,
   gridSize,

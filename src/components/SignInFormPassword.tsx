@@ -7,7 +7,6 @@ export function SignInFormPassword() {
         Sign in or create an account
       </h2>
       <SignInWithPassword />
-      
     </div>
   );
 }

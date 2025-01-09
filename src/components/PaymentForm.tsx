@@ -15,7 +15,7 @@ export function PaymentForm({ amount, pixelIds, onSuccess }: PaymentFormProps) {
   return (
     <PayPalScriptProvider
       options={{
-        clientId: "AYCmwKPuisOU1lrFbVdqLGvNOCDu4LyUNmpD378qR-5z5z2TKbT6HCRf9Kulc8dTZcFkPkP5TlDT6pxV",
+        clientId: "AVpRg6x5lGE3J8CzoZsjBIGaF91oLB7hyrQBDOZ9y-z-LXuCd4W9VWzOCJji5t-LFUft3zMs0ELuldam",
         currency: "USD"
       }}
     >

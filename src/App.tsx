@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="">
       <>
-        <Sphere />
+        <Sphere slider={false}/>
       </>
     </div>
   )

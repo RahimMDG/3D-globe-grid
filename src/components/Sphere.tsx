@@ -97,7 +97,7 @@ function SphereObject({
   );
 }
 
-export default function Sphere({ slider }: { slider: boolean }) {
+export default function Sphere({ slider }: { slider: boolean | undefined}) {
   const [texture, setTexture] = useState<THREE.Texture | null>(null);
   const [hoveredPixel, setHoveredPixel] = useState<PixelData | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });

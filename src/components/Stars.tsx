@@ -32,11 +32,11 @@ export function Stars({ count = 5000 }) {
     
     const texture = new THREE.CanvasTexture(canvas)
     const material = new THREE.PointsMaterial({
-      size: 0.025, // Reduced from 0.1 to make stars smaller
+      size: 1,
       map: texture,
       transparent: true,
       color: '#ffffff',
-      sizeAttenuation: true,
+      sizeAttenuation: false, // Changed from true to false to maintain constant size
     })
     
     return [positions, material]

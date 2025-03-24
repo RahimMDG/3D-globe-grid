@@ -22,7 +22,6 @@ interface PixelData {
   height: number;
 }
 
-
 function SphereObject({
   texture,
   gridSize,
@@ -98,16 +97,24 @@ function SphereObject({
   );
 }
 
-export default function Sphere() {
+export default function Sphere({ slider }: { slider: boolean }) {
   const [texture, setTexture] = useState<THREE.Texture | null>(null);
   const [hoveredPixel, setHoveredPixel] = useState<PixelData | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  const { gridSize } = useControls({
-    gridSize: { value: 100, min: 100, max: 1000, step: 10 },
+  // Always call the hook, regardless of the slider value
+  const { gridSize: controlledGridSize } = useControls({
+    gridSize: {
+      value: 100,
+      min: 100,
+      max: 1000,
+      step: 10,
+      render: () => slider === true,
+    },
   });
 
-  // const gridSize = 1000;
+  // Use the controlled value or the constant value based on the slider flag
+  const gridSize = slider ? controlledGridSize : 1000;
 
   const handleTextureCreated = useCallback((newTexture: THREE.Texture) => {
     // Ensure vibrant colors for the texture

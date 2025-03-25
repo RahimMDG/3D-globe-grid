@@ -1,65 +1,58 @@
-import { useRef, useMemo } from 'react'
-import { useFrame } from '@react-three/fiber'
+import React, { useMemo, useRef, useState, useEffect } from 'react'
 import * as THREE from 'three'
 
-export function Stars({ count = 5000 }) {
-  const mesh = useRef<THREE.Points>(null)
-  
-  // Create positions and material in useMemo to avoid recreating on each render
-  const [positions, starMaterial] = useMemo(() => {
-    // Create positions array
-    const positions = new Float32Array(count * 3)
-    for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 10
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 10
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 10
-    }
-    
-    // Create circular texture for points
+export function Stars({ 
+  size = 1000 
+}) {
+  // Create a star texture
+  const starTexture = useMemo(() => {
     const canvas = document.createElement('canvas')
-    canvas.width = 32
-    canvas.height = 32
+    canvas.width = 2048
+    canvas.height = 2048
     const ctx = canvas.getContext('2d')
+    
     if (ctx) {
-      const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16)
-      gradient.addColorStop(0, 'rgba(255,255,255,1)')
-      gradient.addColorStop(1, 'rgba(255,255,255,0)')
-      ctx.fillStyle = gradient
-      ctx.beginPath()
-      ctx.arc(16, 16, 16, 0, Math.PI * 2)
-      ctx.fill()
-    }
-    
-    const texture = new THREE.CanvasTexture(canvas)
-    const material = new THREE.PointsMaterial({
-      size: 1.5,
-      map: texture,
-      transparent: true,
-      color: '#ffffff',
-      sizeAttenuation: false, // Changed from true to false to maintain constant size
-    })
-    
-    return [positions, material]
-  }, [count])
+      // Fill background with deep black
+      ctx.fillStyle = 'black'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  useFrame(() => {
-    if (mesh.current) {
-      mesh.current.rotation.y += 0.0001
+      // Generate stars
+      const starsCount = 5000
+      for (let i = 0; i < starsCount; i++) {
+        // Random position
+        const x = Math.random() * canvas.width
+        const y = Math.random() * canvas.height
+        
+        // Create star
+        ctx.beginPath()
+        
+        // Varying star sizes
+        const size = 0.2 + Math.random() * 0.5
+        
+        // Create radial gradient for softer star look
+        const gradient = ctx.createRadialGradient(
+          x, y, 0, 
+          x, y, size
+        )
+        gradient.addColorStop(0, 'rgba(255,255,255,0.8)')
+        gradient.addColorStop(1, 'rgba(255,255,255,0)')
+        
+        ctx.fillStyle = gradient
+        ctx.arc(x, y, size, 0, Math.PI * 2)
+        ctx.fill()
+      }
     }
-  })
+
+    return new THREE.CanvasTexture(canvas)
+  }, [])
 
   return (
-    <points ref={mesh}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={positions.length / 3}
-          array={positions}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <primitive object={starMaterial} />
-    </points>
+    <mesh>
+      <boxGeometry args={[size, size, size]} />
+      <meshBasicMaterial 
+        map={starTexture}
+        side={THREE.BackSide}  // Render only the inside of the box
+      />
+    </mesh>
   )
 }
-

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react'
+import { useMemo } from 'react'
 import * as THREE from 'three'
 
 export function Stars({ 
